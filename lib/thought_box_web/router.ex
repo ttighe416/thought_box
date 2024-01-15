@@ -18,6 +18,7 @@ defmodule ThoughtBoxWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live "/box/:box_id", BoxLive
     live "/boxes", BoxesLive
   end
 
