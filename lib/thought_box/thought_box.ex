@@ -21,4 +21,10 @@ defmodule ThoughtBox.ThoughtBox do
   def get_boxes() do
     ThoughtBox.Repo.all(Box)
   end
+
+  def delete_box(box_id) do
+    query = from n in Note, where: n.box_id == ^box_id
+    ThoughtBox.Repo.delete_all(query)
+    ThoughtBox.Repo.delete(get_box(box_id))
+  end
 end
