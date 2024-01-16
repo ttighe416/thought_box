@@ -6,8 +6,6 @@ alias ThoughtBox.{Box, ThoughtBox}
     socket = socket
     |> stream(:boxes, ThoughtBox.get_boxes())
     |> assign(:form, to_form(Box.changeset(%Box{})))
-
-    IO.inspect(socket)
     {:ok, socket}
   end
 
@@ -42,14 +40,12 @@ alias ThoughtBox.{Box, ThoughtBox}
     end
   end
 
-  def handle_event("to_box", %{"boxid" => box_id} = params, socket) do
+  def handle_event("to_box", %{"boxid" => box_id} = _params, socket) do
     {:noreply, push_redirect(socket, to: "/box/#{box_id}")}
   end
 
-  def handle_event("delete_box", %{"boxid" => box_id} = params, socket) do
+  def handle_event("delete_box", %{"boxid" => box_id} = _params, socket) do
     {:ok, box} = ThoughtBox.delete_box(box_id)
-
-    IO.inspect(socket)
     {:noreply, stream_delete(socket, :boxes, box)}
   end
 end
