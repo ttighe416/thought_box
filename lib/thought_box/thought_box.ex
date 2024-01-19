@@ -13,6 +13,12 @@ defmodule ThoughtBox.ThoughtBox do
     |> ThoughtBox.Repo.insert()
   end
 
+  def close_box(box_id) do
+    get_box(box_id)
+    |> Ecto.Changeset.change(status: :closed)
+    |> ThoughtBox.Repo.update()
+  end
+
   def get_box(box_id) do
     query = from b in Box, where: b.id == ^box_id, preload: [:notes]
     ThoughtBox.Repo.one(query)

@@ -19,13 +19,18 @@ def render(assigns) do
 <div class="text-xl">
   Number of entries: <%= Enum.count(@box.notes)%>
 </div>
-<.form for={@form} phx-submit="save">
-  <.input type="text" autofocus placeholder="Add a new note here..." field={@form[:note_body]}/>
-</.form>
-<div class="mt-5"></div>
-<button phx-click="to_boxes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-  To Boxes...
-</button>
+<div :if={@box.status == :closed} :for={note <- @box.notes}>
+  <span> <%= note.body %> </span>
+</div>
+<div :if={@box.status == :open}>
+  <.form for={@form} phx-submit="save">
+    <.input type="text" autofocus placeholder="Add a new note here..." field={@form[:note_body]}/>
+  </.form>
+  <div class="mt-5"></div>
+</div>
+  <button phx-click="to_boxes" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    To Boxes...
+  </button>
 """
 end
 
