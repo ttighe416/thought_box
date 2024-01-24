@@ -3,7 +3,7 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "thought-box-restless-surf-4988"
+app = "thought-box"
 primary_region = "ord"
 kill_signal = "SIGTERM"
 
@@ -13,7 +13,7 @@ kill_signal = "SIGTERM"
   release_command = "/app/bin/migrate"
 
 [env]
-  PHX_HOST = "thought-box-restless-surf-4988.fly.dev"
+  PHX_HOST = "thought-box.fly.dev"
   PORT = "8080"
 
 [http_service]
