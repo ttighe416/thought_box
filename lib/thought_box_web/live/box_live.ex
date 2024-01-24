@@ -42,7 +42,7 @@ def handle_event("save", %{"note" => note} = params, socket) do
   case ThoughtBox.ThoughtBox.create_note(box, note["note_body"]) do
     {:ok, note} ->
       socket = assign(socket, :box, ThoughtBox.ThoughtBox.get_box(box.id))
-      Phoenix.PubSub.broadcast(ThoughtBox.PubSub, "box", {:update_box, box.id})
+      Phoenix.PubSub.broadcast(ThoughtBox.PubSub, "box", {:update_box})
 
       {:noreply, socket}
 
@@ -56,6 +56,10 @@ end
 
 def handle_info({:update_box, box_id}, socket) do
   {:noreply, assign(socket, :box, ThoughtBox.ThoughtBox.get_box(box_id))}
+end
+
+def handle_info({:update_box}, socket) do
+  {:noreply, assign(socket, :box, ThoughtBox.ThoughtBox.get_box(socket.assigns.box.id))}
 end
 
 end
