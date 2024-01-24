@@ -34,6 +34,7 @@ defmodule ThoughtBox.MixProject do
     [
       {:phoenix, "~> 1.7.9"},
       {:phoenix_ecto, "~> 4.4"},
+      {:phoenix_pubsub, "~> 2.1.3"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 3.3"},

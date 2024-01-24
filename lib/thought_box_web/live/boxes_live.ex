@@ -1,10 +1,11 @@
 defmodule ThoughtBoxWeb.BoxesLive do
 use ThoughtBoxWeb, :live_view
-alias ThoughtBox.{Box, ThoughtBox}
+alias ThoughtBox.{Box}
 
   def mount(_params, _session, socket) do
+    Phoenix.PubSub.subscribe(ThoughtBox.PubSub, "other_boxes")
     socket = socket
-    |> stream(:boxes, ThoughtBox.get_boxes())
+    |> stream(:boxes, ThoughtBox.ThoughtBox.get_boxes())
     |> assign(:form, to_form(Box.changeset(%Box{})))
     {:ok, socket}
   end
@@ -24,7 +25,7 @@ alias ThoughtBox.{Box, ThoughtBox}
   end
 
   def handle_event("save", params, socket) do
-    case ThoughtBox.create_box(params["box"]) do
+    case ThoughtBox.ThoughtBox.create_box(params["box"]) do
       {:ok, box} ->
         socket =
         socket
@@ -43,8 +44,8 @@ alias ThoughtBox.{Box, ThoughtBox}
     {:noreply, stream_insert(socket, :boxes, box)}
   end
 
-  def handle_info({:delete_box, box}, socket) do
-    {:noreply, stream_delete(socket, :boxes, box)}
+  def handle_info({:delete_box, box_id}, socket) do
+    {:noreply, stream_delete_by_dom_id(socket, :boxes, "boxes-#{box_id}")}
   end
 
 
