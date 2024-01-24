@@ -30,6 +30,7 @@ alias ThoughtBox.{Box}
         socket =
         socket
         |> stream_insert(:boxes, box)
+        Phoenix.PubSub.broadcast(ThoughtBox.PubSub, "other_boxes", {:add_box, box})
         {:noreply, socket}
 
       _ -> {:noreply, socket}
@@ -46,6 +47,14 @@ alias ThoughtBox.{Box}
 
   def handle_info({:delete_box, box_id}, socket) do
     {:noreply, stream_delete_by_dom_id(socket, :boxes, "boxes-#{box_id}")}
+  end
+
+  def handle_info({:add_box, box}, socket) do
+    {:noreply, stream_insert(socket, :boxes, box)}
+  end
+
+  def handle_info({:update_box, box}, socket) do
+    {:noreply, stream_insert(socket, :boxes, box)}
   end
 
 

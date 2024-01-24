@@ -1,11 +1,13 @@
 defmodule ThoughtBoxWeb.BoxLive do
 use ThoughtBoxWeb, :live_view
-alias ThoughtBox.{Note, ThoughtBox}
+alias ThoughtBox.{Note}
 
 
 def mount(params, _session, socket) do
+  Phoenix.PubSub.subscribe(ThoughtBox.PubSub, "box")
+
   socket = socket
-  |> assign(:box, ThoughtBox.get_box(params["box_id"]))
+  |> assign(:box, ThoughtBox.ThoughtBox.get_box(params["box_id"]))
   |> assign(:form, to_form(Note.changeset(%Note{})))
 
   {:ok, socket}
@@ -19,7 +21,8 @@ def render(assigns) do
 <div class="text-xl">
   Number of entries: <%= Enum.count(@box.notes)%>
 </div>
-<div :if={@box.status == :closed} :for={note <- @box.notes}>
+<div :if={@box.status == :closed} :for={note <- @box.notes}
+ class="transition duration-300 shadow my-5 p-3 hover:shadow-2xl flow-root">
   <span> <%= note.body %> </span>
 </div>
 <div :if={@box.status == :open}>
@@ -36,9 +39,11 @@ end
 
 def handle_event("save", %{"note" => note} = params, socket) do
   box = socket.assigns.box
-  case ThoughtBox.create_note(box, note["note_body"]) do
+  case ThoughtBox.ThoughtBox.create_note(box, note["note_body"]) do
     {:ok, note} ->
-      socket = assign(socket, :box, ThoughtBox.get_box(box.id))
+      socket = assign(socket, :box, ThoughtBox.ThoughtBox.get_box(box.id))
+      Phoenix.PubSub.broadcast(ThoughtBox.PubSub, "box", {:update_box, box.id})
+
       {:noreply, socket}
 
     _ -> {:noreply, socket}
@@ -47,6 +52,10 @@ end
 
 def handle_event("to_boxes", _params, socket) do
   {:noreply, push_redirect(socket, to: "/boxes")}
+end
+
+def handle_info({:update_box, box_id}, socket) do
+  {:noreply, assign(socket, :box, ThoughtBox.ThoughtBox.get_box(box_id))}
 end
 
 end

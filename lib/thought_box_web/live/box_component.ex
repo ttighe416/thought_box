@@ -22,6 +22,8 @@ defmodule BoxComponent do
 
   def handle_event("close_box", %{"boxid" => box_id} = _params, socket) do
     {:ok, box} = ThoughtBox.ThoughtBox.close_box(box_id)
+    Phoenix.PubSub.broadcast(ThoughtBox.PubSub, "box", {:update_box, box.id})
+    Phoenix.PubSub.broadcast(ThoughtBox.PubSub, "other_boxes", {:update_box, box})
     send self(), {:update_box, box}
     {:noreply, socket}
   end
