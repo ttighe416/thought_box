@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for thought-box on 2024-01-24T11:42:52-06:00
+# fly.toml app configuration file generated for thought-box-restless-surf-4988 on 2024-01-24T11:51:32-06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "thought-box"
+app = "thought-box-restless-surf-4988"
 primary_region = "ord"
 kill_signal = "SIGTERM"
 
@@ -13,7 +13,7 @@ kill_signal = "SIGTERM"
   release_command = "/app/bin/migrate"
 
 [env]
-  PHX_HOST = "thought-box.fly.dev"
+  PHX_HOST = "thought-box-restless-surf-4988.fly.dev"
   PORT = "8080"
 
 [http_service]
