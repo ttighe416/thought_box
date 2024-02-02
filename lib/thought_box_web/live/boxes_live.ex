@@ -30,6 +30,7 @@ alias ThoughtBox.{Box}
         socket =
         socket
         |> stream_insert(:boxes, box)
+        |> Phoenix.LiveView.put_flash(:success, "Box successfully created.")
         Phoenix.PubSub.broadcast(ThoughtBox.PubSub, "other_boxes", {:add_box, box})
         {:noreply, socket}
 
